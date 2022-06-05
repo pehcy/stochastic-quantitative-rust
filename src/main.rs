@@ -1,10 +1,23 @@
-use std::io;
+use cpython::{py_fn, py_module_initializer, PyResult, Python};
 use statrs::distribution::{Normal, ContinuousCDF};
 use rand::distributions::{Distribution, Standard, Uniform};
 use rand::Rng;
 
+py_module_initializer!(
+    rust_stochastic_lib,
+    |py, m| {
+        m.add(py, "__doc__", "Stochastic simulation module implemented in rust")?;
+        m.add(
+            py,
+            "mcs_pi_simulation_cpython",
+            py_fn!(py, mcs_pi_simulation_cpython(n: i64))
+        )?;
+        Ok(())
+    }
+);
+
 fn main() {
-    println!("The Pi approximation is: {:?}", mcs_pi_simulation(5000));
+    //println!("The Pi approximation is: {:?}", mcs_pi_simulation(50000));
 }
 
 pub struct EuropeanOption {
@@ -81,7 +94,7 @@ impl Distribution<Point> for Standard {
 }
 
 // generate 5000 point on R^2 plane 
-fn mcs_pi_simulation(n: usize) -> f64 {
+fn mcs_pi_simulation(n: i64) -> f64 {
     let mut rng = rand::thread_rng();
     let mut count: i32 = 0;
     let rand_points: Vec<Point> = (0..n).map(|_| rng.gen()).collect();
@@ -93,4 +106,9 @@ fn mcs_pi_simulation(n: usize) -> f64 {
     }
 
     (4.0_f64 * count as f64) / n as f64
+}
+
+fn mcs_pi_simulation_cpython(_: Python, n: i64) -> PyResult<f64> {
+    let _gil = Python::acquire_gil();
+    Ok(mcs_pi_simulation(n))
 }

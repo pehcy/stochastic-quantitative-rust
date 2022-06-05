@@ -5,6 +5,12 @@ edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
+[lib]
+name = "rust_stochastic"
+crate-type = ["cdylib"]
+
 [dependencies]
+cpython = { version="0.7", features=["extension-module"] }
+pyo3 = "0.16.5"
 statrs = "0.15.0"
 rand = "0.8.5"
