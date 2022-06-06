@@ -2,7 +2,6 @@ use statrs::distribution::{Normal, ContinuousCDF};
 use rand::distributions::{Distribution, Standard, Uniform};
 use rand::Rng;
 
-extern crate ndarray;
 extern crate rand;
 
 mod black_scholes;
