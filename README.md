@@ -11,8 +11,7 @@ approach to decide trading strategy.
 
 ## Why using Rust?
 Although Python is widely used by quantitative analysts 
-and statistician. While comparing to Python, Rust provide the best performance and faster compilation speed. Also, 
-it's more C like.
+and statistician. While comparing Rust with Python, Rust provide the best performance and faster compilation speed. Also, it's more C like. The code can be written more idiomatic.
 
 ## Reading Notes
 
