@@ -6,8 +6,8 @@ mod black_scholes {
 
     #[derive(Debug)]
     pub struct BlackScholesModel {
-        // c:  f64,
-        // k:  f64, 
+        c:  f64,
+        k:  f64, 
         s0: f64,
         r:  f64,
         sigma: f64,
@@ -23,7 +23,7 @@ mod black_scholes {
 
     impl GeomBM for BlackScholesModel {
 
-        /// geometric brownian motion.
+        /// static geometric brownian motion.
         /// 
         /// Assume the Black-scholes-Merton model is in its 
         /// dynamic form, with constant volatility and risk-free interest rate
@@ -49,7 +49,11 @@ mod black_scholes {
             result
         }
 
-        /// GBM with euler discretization.
+        /// dynamic geometric brownian motion.
+        /// 
+        /// The Black-Scholes SDE that has been discretized exactly 
+        /// by an Euler scheme, with Δ_t being the fixed discretization interval
+        /// and z_t being an array of random sampling from standard normal.
         /// 
         fn dynamic_geobm(&self, m: usize) -> Vec<Vec<f64>> {
             let mut levels = vec![vec![0f64; _SAMPLE_SIZE]; m];
