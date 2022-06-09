@@ -16,7 +16,7 @@ mod black_scholes {
 
     pub trait GeomBM {
         fn static_geobm(&self, n: usize) -> Vec<f64>;
-        fn dynamic_geobm(&self, m: usize, dt: f64) -> Vec<Vec<f64>>;
+        fn dynamic_geobm(&self, m: usize) -> Vec<Vec<f64>>;
     }
 
     pub const _SAMPLE_SIZE : usize = 10000;
@@ -51,8 +51,9 @@ mod black_scholes {
 
         /// GBM with euler discretization.
         /// 
-        fn dynamic_geobm(&self, m: usize, dt: f64) -> Vec<Vec<f64>> {
+        fn dynamic_geobm(&self, m: usize) -> Vec<Vec<f64>> {
             let mut levels = vec![vec![0f64; _SAMPLE_SIZE]; m];
+            let dt = self.t / m as f64;
 
             let rng = rand::thread_rng();
             let range = Uniform::new(-1.0f64, 1.0f64);
