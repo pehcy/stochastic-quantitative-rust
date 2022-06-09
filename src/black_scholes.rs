@@ -1,7 +1,7 @@
 mod black_scholes {
     // use crate::linearalg::*;
 
-    use rand::distributions::{Distribution, Standard, Uniform};
+    use rand::distributions::Uniform;
     use rand::Rng;
 
     #[derive(Debug)]
@@ -15,9 +15,11 @@ mod black_scholes {
     }
 
     pub trait GeomBM {
-        fn get_sim_index_lvls(&self, n: usize) -> Vec<f64>;
-        fn eudisc_index_lvls(&self) -> Vec<f64>;
+        fn static_geobm(&self, n: usize) -> Vec<f64>;
+        fn dynamic_geobm(&self, m: usize, dt: f64) -> Vec<Vec<f64>>;
     }
+
+    pub const _SAMPLE_SIZE : usize = 10000;
 
     impl GeomBM for BlackScholesModel {
 
@@ -30,8 +32,8 @@ mod black_scholes {
         /// ```formula
         /// S_t = S_{t - Δ_t} * exp((r - 1/2 * σ^2) * Δ_t + σ * sqrt{Δ_t} z_t)
         /// ```
-        /// 
-        fn get_sim_index_lvls(&self, n: usize) -> Vec<f64> {
+        ///
+        fn static_geobm(&self, n: usize) -> Vec<f64> {
             let rng = rand::thread_rng();
             let range = Uniform::new(-1.0f64, 1.0f64);
             let stds: Vec<f64> = rng.sample_iter(&range)
@@ -49,8 +51,29 @@ mod black_scholes {
 
         /// GBM with euler discretization.
         /// 
-        fn eudisc_index_lvls(&self) -> Vec<f64> {
-            vec![0.5]
+        fn dynamic_geobm(&self, m: usize, dt: f64) -> Vec<Vec<f64>> {
+            let mut levels = vec![vec![0f64; _SAMPLE_SIZE]; m];
+
+            let rng = rand::thread_rng();
+            let range = Uniform::new(-1.0f64, 1.0f64);
+            let stds: Vec<f64> = rng.sample_iter(&range)
+                                .take(_SAMPLE_SIZE)
+                                .collect();
+
+            for i in 0..m {
+                for j in 0.._SAMPLE_SIZE {
+                    if i == 0 {
+                        levels[i][j] = self.s0;
+                    }
+                    else {
+                        levels[i][j] = &levels[i-1][j] 
+                            * ((self.r - 0.5_f64 * f64::powi(self.sigma, 2)) * dt
+                            + self.sigma * dt.sqrt() * &stds[j]).exp(); 
+                    }
+                }
+            }
+
+            levels
         }
     }
 }
