@@ -23,7 +23,7 @@ and statistician. While comparing Rust with Python, Rust provide the best perfor
 
 ## TODO List
 - [ ] Implement Square-root diffusion, 
-Geometric Brownian motion, and their variance of 
+Geometric Brownian motion, and their variation of 
 euler discretization.
 - [ ] Give a sample jupyterNotebook for 
 visualization
