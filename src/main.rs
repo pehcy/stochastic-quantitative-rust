@@ -3,12 +3,24 @@ use rand::distributions::{Distribution, Standard, Uniform};
 use rand::Rng;
 
 extern crate rand;
-
 mod black_scholes;
+
+pub use black_scholes::BlackScholesModel;
+
+use black_scholes::GeomBM;
+
 // mod linearalg;
 
 fn main() {
-    println!("The Pi approximation is: {:?}", mcs_pi_simulation(10000));
+    let bm = BlackScholesModel {
+        c: 0.0,
+        k: 0.0,
+        r: 0.05,
+        sigma: 0.30,
+        s0: 100.0,
+        t: 2.0
+    };
+    println!("The Static Geometric Brownian motion simulation is:\n {:?}", bm.static_geobm(5000));
 }
 
 pub struct EuropeanOption {
