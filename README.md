@@ -19,7 +19,8 @@ Although Python is widely used by quantitative analysts
 and statistician. While comparing Rust with Python, Rust provide the best performance and faster compilation speed. Also, it's more C like. The code can be written more idiomatic.
 
 ## Reading Notes
-**Sorry... Still in Progress**
+A minimal notes for quantitative finance 
+can be found [here](https://raw.githubusercontent.com/pehcy/stochastic-quantitative-rust/main/notes.pdf).
 
 ## TODO List
 - [ ] Implement Square-root diffusion, 
