@@ -2,6 +2,7 @@
 
 use rand::distributions::Uniform;
 use rand::Rng;
+use std::cmp;
 
 #[derive(Clone, Copy, Debug)]
 pub struct BlackScholesModel {
@@ -16,6 +17,7 @@ pub struct BlackScholesModel {
 pub trait GeomBM {
     fn static_geobm(&self, n: usize) -> Vec<f64>;
     fn dynamic_geobm(&self, m: usize) -> Vec<Vec<f64>>;
+    fn sqrt_diffusion(&self, kappa: f64, theta: f64, m: usize) -> Vec<Vec<f64>>;
 }
 
 pub const _SAMPLE_SIZE : usize = 10000;
@@ -78,5 +80,32 @@ impl GeomBM for BlackScholesModel {
         }
 
         levels
+    }
+
+    fn sqrt_diffusion(&self, kappa: f64, theta: f64, m: usize) -> Vec<Vec<f64>> {
+        let mut s_vect2d = vec![vec![0f64; _SAMPLE_SIZE]; m];
+        let dt: f64 = self.t / m as f64;
+        let rng = rand::thread_rng();
+            let range = Uniform::new(-1.0f64, 1.0f64);
+            let stds: Vec<f64> = rng.sample_iter(&range)
+                            .take(_SAMPLE_SIZE)
+                            .collect();
+
+        for i in 0..m {
+            for j in 0.._SAMPLE_SIZE {
+                if i == 0 {
+                    s_vect2d[i][j] = self.s0;
+                }
+                else {
+                    let previous = s_vect2d[i-1][j];
+                    let previous_plus = f64::max(previous, 0.0_f64);
+                    s_vect2d[i][j] = (previous
+                        + kappa * (theta - previous_plus)) * dt
+                        + self.sigma * f64::sqrt(previous_plus) * dt.sqrt()
+                        * stds[j];
+                }
+            }
+        }
+        s_vect2d
     }
 }
